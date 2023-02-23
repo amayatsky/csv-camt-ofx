@@ -17,7 +17,7 @@ $ pip3 install -r requirements.txt
 ## Usage
 ### Terminal
 ```sh
-$ python ofxer.py your_bank.csv -c 1 4 11 14
+$ python3 ofxer.py your_bank.csv -c 1 4 11 14
 ```
 
 ```
