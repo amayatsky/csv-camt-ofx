@@ -84,8 +84,16 @@ class Ofxer:
                 df = df.str.replace(',', '.', regex=False) # 1890,41 -> 1890.41
                 df = df.astype(float)
             return df
-
+        
+        # trim whitespaces to single spaces
+        def __trim(df):
+            if df.dtype == 'object':
+                df = df.str.replace(r'\s+', ' ', regex=True)
+            return df
+        
         df['amount'] = __to_num(df['amount'])
+        df['title'] = __trim(df['title'])
+        df['memo'] = __trim(df['memo'])
         
         return df
 
