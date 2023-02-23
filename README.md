@@ -11,7 +11,7 @@ A script for converting CSV CAMT files exported from your bank account.
 
 ## Requirements
 ```sh
-$ pip install csv2ofx pandas
+$ pip3 install -r requirements.txt
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ $ python ofxer.py your_bank.csv -c 1 4 11 14
 ```
 
 ```
-$ python ofxer.py --help
+$ python3 ofxer.py --help
 usage: ofxer.py [-h] [-p PARSER] [-o OUTPUT] [-s SKIPROWS] [-e ENCODING] -c USECOLS [USECOLS ...] csvfile
 
 CSV CAMT to OFX converter tuned to German banking format.
