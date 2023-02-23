@@ -15,9 +15,9 @@ $ pip install csv2ofx pandas
 ```
 
 ## Usage
-### terminal
+### Terminal
 ```sh
-$ python ofxer.py -c 1 4 11 14 your_bank.csv -o bank.ofx
+$ python ofxer.py your_bank.csv -c 1 4 11 14
 ```
 
 ```
