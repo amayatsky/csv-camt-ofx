@@ -17,7 +17,7 @@ $ pip3 install -r requirements.txt
 ## Usage
 ### Terminal
 ```sh
-$ python3 ofxer.py your_bank.csv -c 1 4 11 14
+$ python3 ofxer.py your_bank.csv -c 1,4,11,14
 ```
 
 ```
@@ -40,10 +40,12 @@ options:
                         skipping number of csv file headers (incl. column name)
   -e ENCODING, --encoding ENCODING
                         file encoding
+  -sp SEPARATOR, --separator SEPARATOR
+                        csv separator
   -c USECOLS [USECOLS ...], --usecols USECOLS [USECOLS ...]
                         column index number of
                           date memo title amount
-                          (e.g. --usecols 1 4 11 14)
+                          (e.g. --usecols 1,4,11,14)
                           Note: counting from ZERO
 ```
 

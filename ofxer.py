@@ -54,10 +54,12 @@ class Ofxer:
     def __load_csv(self, csvfile, option):
 
         colnames = ['date', 'memo', 'title', 'amount']
+        usecols = option['usecols']
+        usecols, colnames = zip(*sorted(zip(usecols, colnames)))
         
-        df = pd.read_csv(csvfile, index_col=0, sep=';',
+        df = pd.read_csv(csvfile, index_col='date', sep=option['separator'],
                          skiprows=option['skiprows'],
-                         usecols=option['usecols'],
+                         usecols=usecols,
                          encoding=option['encoding'],
                          names=colnames)
 
@@ -121,27 +123,6 @@ class Ofxer:
             for line in IterStringIO(content):
                 f.write(line)
 
-
-def col_act():
-    # Note: https://stackoverflow.com/questions/4194948/python-argparse-is-there-a-way-to-specify-a-range-in-nargs
-    class ColumnAction(argparse.Action):
-        def __call__(self, parser, args, values, option_string=None):
-            nmin = 4
-            nmax = 4
-            if not nmin <= len(values) <= nmax:
-                msg = 'argument "{f}" requires between {nmin} and {nmax} arguments'.format(
-                    f=self.dest, nmin=nmin, nmax=nmax)
-                raise argparse.ArgumentTypeError(msg)
-            # check duplication
-            if len(values) != len(set(values)):
-                msg = 'argument "{f} {v}" duplicated'.format(
-                    f=self.dest, v=values)
-                raise argparse.ArgumentTypeError(msg)
-
-            setattr(args, self.dest, values)
-    return ColumnAction
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
                 prog='ofxer.py',
@@ -156,18 +137,22 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output',   action='store',   nargs=None, default='output.ofx',    help='path to write ofx file (default: output.ofx)')
     parser.add_argument('-s', '--skiprows', action='store',   nargs=None, default=1, type=int,     help='skipping number of csv file headers (incl. column name)')
     parser.add_argument('-e', '--encoding', action='store',   nargs=None, default='unicode_escape',help='file encoding')
-    parser.add_argument('-c', '--usecols',  action=col_act(), nargs='+',  required=True, type=int, help=textwrap.dedent('''\
+    parser.add_argument('-sp', '--separator', action='store',   nargs=None, default=';', type=str, help='csv separator')
+    parser.add_argument('-c', '--usecols',  action='store', nargs=None,  required=True, type=str, help=textwrap.dedent('''\
                                                                                                         column index number of
                                                                                                           date memo title amount
-                                                                                                          (e.g. --usecols 1 4 11 14)
+                                                                                                          (e.g. --usecols 1,4,11,14)
                                                                                                           Note: counting from ZERO
                                                                                                         '''))
-
     args = parser.parse_args()
+    usecols = [int(item) for item in args.usecols.split(',')]
+    if len(usecols) < 4:
+        raise argparse.ArgumentTypeError("Please provide 4 columns")    
 
     options = {'parser': args.parser,
                'skiprows': args.skiprows,
-               'usecols': args.usecols,
+               'usecols': usecols,
+               'separator': args.separator,
                'encoding': args.encoding}
 
     ofxer = Ofxer(args.csvfile, options)
